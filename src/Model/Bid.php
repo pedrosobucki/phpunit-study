@@ -1,8 +1,8 @@
 <?php
 
-namespace Alura\Auction\Model;
+namespace PSobucki\Auction\Model;
 
-use Alura\Auction\Model\User;
+use PSobucki\Auction\Model\User;
 
 class Bid
 {

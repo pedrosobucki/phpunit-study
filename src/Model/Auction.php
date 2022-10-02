@@ -1,6 +1,6 @@
 <?php
 
-namespace Alura\Auction\Model;
+namespace PSobucki\Auction\Model;
 
 class Auction
 {
