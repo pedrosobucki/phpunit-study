@@ -103,4 +103,27 @@ class EvaluatorTest extends TestCase
         self::assertEquals(2000.0, $expectedValue);
     }
 
+    public function testAuctioneerMustRetrieve3HighestBiddingValues(): void
+    {
+        $auction = new Auction('Fiat 147 0KM');
+        $john = new User('Josh');
+        $anne = new User('Anne');
+        $mary = new User('Mary');
+        $jorge = new User('Jorge');
+
+        $auction->receiveBid(new Bid($anne, 1500));
+        $auction->receiveBid(new Bid($john, 1000));
+        $auction->receiveBid(new Bid($mary, 2000));
+        $auction->receiveBid(new Bid($jorge, 1700));
+
+        $auctioneer = new Evaluator();
+        $auctioneer->evaluate($auction);
+
+        $highestBids = $auctioneer->getHighestBids();
+        static::assertCount(3, $highestBids);
+        static::assertEquals(2000, $highestBids[0]->getValue());
+        static::assertEquals(1700, $highestBids[1]->getValue());
+        static::assertEquals(1500, $highestBids[2]->getValue());
+    }
+
 }
