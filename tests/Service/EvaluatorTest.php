@@ -34,4 +34,27 @@ class EvaluatorTest extends TestCase
         self::assertEquals(2500, $expectedValue);
     }
 
+    public function testAuctioneerShouldFindHighestBidInDescendingOrder(): void
+    {
+        // Arrange - Given;
+        $auction = new Auction("Fiat 147 0km");
+
+        $john = new User("John");
+        $anne = new User("Anne");
+
+        $auction->receiveBid(new Bid($anne, 2500));
+        $auction->receiveBid(new Bid($john, 2000));
+
+        $auctioneer = new Evaluator();
+
+
+        // Act - When
+        $auctioneer->evaluate($auction);
+        $expectedValue = $auctioneer->getHighestBid();
+
+
+        // Assert - Then
+        self::assertEquals(2500, $expectedValue);
+    }
+
 }
