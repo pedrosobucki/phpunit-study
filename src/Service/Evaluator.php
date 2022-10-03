@@ -6,14 +6,15 @@ use PSobucki\Auction\Model\Auction;
 
 class Evaluator
 {
-    private float $highestBid;
+    private float $highestBid = -INF;
 
     public function evaluate(Auction $auction): void
     {
-        $bids = $auction->getBids();
-        $lastBid = $bids[count($bids) - 1];
-
-        $this->highestBid = $lastBid->getValue();
+        foreach ($auction->getBids() as $bid) {
+            if ($bid->getValue() > $this->highestBid) {
+                $this->highestBid = $bid->getValue();
+            }
+        }
     }
 
     public function getHighestBid(): float
