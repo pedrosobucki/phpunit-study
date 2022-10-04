@@ -1,0 +1,11 @@
+Evaluator (PSobucki\Auction\Tests\Service\Evaluator)
+ [x] Auctioneer should find highest bid with data set "ascending-order"
+ [x] Auctioneer should find highest bid with data set "descending-order"
+ [x] Auctioneer should find highest bid with data set "random-order"
+ [x] Auctioneer should find lowest bid with data set "ascending-order"
+ [x] Auctioneer should find lowest bid with data set "descending-order"
+ [x] Auctioneer should find lowest bid with data set "random-order"
+ [x] Auctioneer must retrieve 3 highest bidding values with data set "ascending-order"
+ [x] Auctioneer must retrieve 3 highest bidding values with data set "descending-order"
+ [x] Auctioneer must retrieve 3 highest bidding values with data set "random-order"
+

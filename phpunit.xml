@@ -1,5 +1,17 @@
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+        colors="true"
 >
+    <testsuites>
+        <testsuite name="unit">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <text outputFile="logs/phpunit/logfile.txt"/>
+        <testdoxHtml outputFile="logs/phpunit/testdox.html"/>
+        <testdoxText outputFile="logs/phpunit/testdox.txt"/>
+    </logging>
 </phpunit>
