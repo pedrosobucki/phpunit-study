@@ -31,11 +31,7 @@ class Auction
         return $this->bids;
     }
 
-    /**
-     * @param Bid $bid
-     * @return bool
-     */
-    public function isRepeatedUserBid(Bid $bid): bool
+    private function isRepeatedUserBid(Bid $bid): bool
     {
         $lastBid = $this->bids[array_key_last($this->bids)];
         return $lastBid->getUser() === $bid->getUser();
