@@ -11,119 +11,113 @@ use PSobucki\Auction\Service\Evaluator;
 class EvaluatorTest extends TestCase
 {
 
-    public function testAuctioneerShouldFindHighestBidInAscendingOrder(): void
+    /**
+     * @dataProvider auctionInAscendingOrder
+     * @dataProvider auctionInDescendingOrder
+     * @dataProvider auctionInRandomOrder
+     */
+    public function testAuctioneerShouldFindHighestBid(Auction $auction): void
     {
-        // Arrange - Given;
-        $auction = new Auction("Fiat 147 0km");
-
-        $john = new User("John");
-        $anne = new User("Anne");
-
-        $auction->receiveBid(new Bid($john, 2000));
-        $auction->receiveBid(new Bid($anne, 2500));
-
+        // Arrange - Given
         $auctioneer = new Evaluator();
-
 
         // Act - When
         $auctioneer->evaluate($auction);
         $expectedValue = $auctioneer->getHighestBid();
 
-
         // Assert - Then
         self::assertEquals(2500, $expectedValue);
     }
 
-    public function testAuctioneerShouldFindHighestBidInDescendingOrder(): void
+    /**
+     * @dataProvider auctionInAscendingOrder
+     * @dataProvider auctionInDescendingOrder
+     * @dataProvider auctionInRandomOrder
+     */
+    public function testAuctioneerShouldFindLowestBid(Auction $auction): void
     {
-        // Arrange - Given;
-        $auction = new Auction("Fiat 147 0km");
-
-        $john = new User("John");
-        $anne = new User("Anne");
-
-        $auction->receiveBid(new Bid($anne, 2500));
-        $auction->receiveBid(new Bid($john, 2000));
-
+        // Arrange - Given
         $auctioneer = new Evaluator();
-
-
-        // Act - When
-        $auctioneer->evaluate($auction);
-        $expectedValue = $auctioneer->getHighestBid();
-
-
-        // Assert - Then
-        self::assertEquals(2500, $expectedValue);
-    }
-
-    public function testAuctioneerShouldFindLowestBidInAscendingOrder(): void
-    {
-        // Arrange - Given;
-        $auction = new Auction("Fiat 147 0km");
-
-        $john = new User("John");
-        $anne = new User("Anne");
-
-        $auction->receiveBid(new Bid($john, 2000));
-        $auction->receiveBid(new Bid($anne, 2500));
-
-        $auctioneer = new Evaluator();
-
 
         // Act - When
         $auctioneer->evaluate($auction);
         $expectedValue = $auctioneer->getLowestBid();
 
-
         // Assert - Then
-        self::assertEquals(2000.0, $expectedValue);
+        self::assertEquals(1700, $expectedValue);
     }
 
-    public function testAuctioneerShouldFindLowestBidInDescendingOrder(): void
+    /**
+     * @dataProvider auctionInAscendingOrder
+     * @dataProvider auctionInDescendingOrder
+     * @dataProvider auctionInRandomOrder
+     */
+    public function testAuctioneerMustRetrieve3HighestBiddingValues(Auction $auction): void
     {
-        // Arrange - Given;
-        $auction = new Auction("Fiat 147 0km");
-
-        $john = new User("John");
-        $anne = new User("Anne");
-
-        $auction->receiveBid(new Bid($anne, 2500));
-        $auction->receiveBid(new Bid($john, 2000));
-
+        // Arrange - Given
         $auctioneer = new Evaluator();
-
 
         // Act - When
         $auctioneer->evaluate($auction);
-        $expectedValue = $auctioneer->getLowestBid();
-
+        $highestBids = $auctioneer->getHighestBids();
 
         // Assert - Then
-        self::assertEquals(2000.0, $expectedValue);
+        static::assertCount(3, $highestBids);
+        static::assertEquals(2500, $highestBids[0]->getValue());
+        static::assertEquals(2000, $highestBids[1]->getValue());
+        static::assertEquals(1700, $highestBids[2]->getValue());
     }
 
-    public function testAuctioneerMustRetrieve3HighestBiddingValues(): void
+
+    public function auctionInAscendingOrder(): array
     {
         $auction = new Auction('Fiat 147 0KM');
-        $john = new User('Josh');
-        $anne = new User('Anne');
+
         $mary = new User('Mary');
-        $jorge = new User('Jorge');
+        $john = new User('John');
+        $anne = new User('Anne');
 
-        $auction->receiveBid(new Bid($anne, 1500));
-        $auction->receiveBid(new Bid($john, 1000));
-        $auction->receiveBid(new Bid($mary, 2000));
-        $auction->receiveBid(new Bid($jorge, 1700));
+        $auction->receiveBid(new Bid($anne, 1700));
+        $auction->receiveBid(new Bid($john, 2000));
+        $auction->receiveBid(new Bid($mary, 2500));
 
-        $auctioneer = new Evaluator();
-        $auctioneer->evaluate($auction);
+        return [
+            'ascending-order' => [$auction]
+        ];
+    }
 
-        $highestBids = $auctioneer->getHighestBids();
-        static::assertCount(3, $highestBids);
-        static::assertEquals(2000, $highestBids[0]->getValue());
-        static::assertEquals(1700, $highestBids[1]->getValue());
-        static::assertEquals(1500, $highestBids[2]->getValue());
+    public function auctionInDescendingOrder(): array
+    {
+        $auction = new Auction('Fiat 147 0KM');
+
+        $mary = new User('Mary');
+        $john = new User('John');
+        $anne = new User('Anne');
+
+        $auction->receiveBid(new Bid($mary, 2500));
+        $auction->receiveBid(new Bid($john, 2000));
+        $auction->receiveBid(new Bid($anne, 1700));
+
+        return [
+            'descending-order' => [$auction]
+        ];
+    }
+
+    public function auctionInRandomOrder(): array
+    {
+        $auction = new Auction('Fiat 147 0KM');
+
+        $mary = new User('Mary');
+        $john = new User('John');
+        $anne = new User('Anne');
+
+        $auction->receiveBid(new Bid($john, 2000));
+        $auction->receiveBid(new Bid($mary, 2500));
+        $auction->receiveBid(new Bid($anne, 1700));
+
+        return [
+            'random-order' => [$auction]
+        ];
     }
 
 }
