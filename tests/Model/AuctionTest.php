@@ -37,6 +37,30 @@ class AuctionTest extends TestCase
         self::assertCount(1, $bids);
         self::assertEquals(1000, $bids[array_key_last($bids)]->getValue());
     }
+
+    public function testAuctionShouldNotReceiveMoreThan5BidsPerUser(): void
+    {
+        $auction = new Auction('White Focus');
+        $john = new User('John');
+        $anne = new User('Anne');
+
+        $auction->receiveBid(new Bid($john, 1000));
+        $auction->receiveBid(new Bid($anne, 1500));
+        $auction->receiveBid(new Bid($john, 2000));
+        $auction->receiveBid(new Bid($anne, 2500));
+        $auction->receiveBid(new Bid($john, 3000));
+        $auction->receiveBid(new Bid($anne, 3500));
+        $auction->receiveBid(new Bid($john, 4000));
+        $auction->receiveBid(new Bid($anne, 4500));
+        $auction->receiveBid(new Bid($john, 5000));
+        $auction->receiveBid(new Bid($anne, 5500));
+
+        $auction->receiveBid(new Bid($john, 6000));
+
+        $bids = $auction->getBids();
+        static::assertCount(10, $bids);
+        static::assertEquals(5500, $bids[array_key_last($bids)]->getValue());
+    }
     
     public function auctionSets(): array
     {
