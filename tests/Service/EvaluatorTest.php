@@ -10,6 +10,12 @@ use PSobucki\Auction\Service\Evaluator;
 
 class EvaluatorTest extends TestCase
 {
+    private Evaluator $auctioneer;
+
+    protected function setUp(): void
+    {
+        $this->auctioneer = new Evaluator();
+    }
 
     /**
      * @dataProvider auctionInAscendingOrder
@@ -18,12 +24,9 @@ class EvaluatorTest extends TestCase
      */
     public function testAuctioneerShouldFindHighestBid(Auction $auction): void
     {
-        // Arrange - Given
-        $auctioneer = new Evaluator();
-
         // Act - When
-        $auctioneer->evaluate($auction);
-        $expectedValue = $auctioneer->getHighestBid();
+        $this->auctioneer->evaluate($auction);
+        $expectedValue = $this->auctioneer->getHighestBid();
 
         // Assert - Then
         self::assertEquals(2500, $expectedValue);
@@ -36,12 +39,9 @@ class EvaluatorTest extends TestCase
      */
     public function testAuctioneerShouldFindLowestBid(Auction $auction): void
     {
-        // Arrange - Given
-        $auctioneer = new Evaluator();
-
         // Act - When
-        $auctioneer->evaluate($auction);
-        $expectedValue = $auctioneer->getLowestBid();
+        $this->auctioneer->evaluate($auction);
+        $expectedValue = $this->auctioneer->getLowestBid();
 
         // Assert - Then
         self::assertEquals(1700, $expectedValue);
@@ -54,12 +54,9 @@ class EvaluatorTest extends TestCase
      */
     public function testAuctioneerMustRetrieve3HighestBiddingValues(Auction $auction): void
     {
-        // Arrange - Given
-        $auctioneer = new Evaluator();
-
         // Act - When
-        $auctioneer->evaluate($auction);
-        $highestBids = $auctioneer->getHighestBids();
+        $this->auctioneer->evaluate($auction);
+        $highestBids = $this->auctioneer->getHighestBids();
 
         // Assert - Then
         static::assertCount(3, $highestBids);
