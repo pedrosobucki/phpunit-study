@@ -24,6 +24,19 @@ class AuctionTest extends TestCase
             self::assertEquals($expectedValue, $auction->getBids()[$i]->getValue());
         }
     }
+
+    public function testAuctionMustNotReceiveRepeatedBids(): void
+    {
+        $auction = new Auction('Variant');
+        $anne = new User('Anne');
+
+        $auction->receiveBid(new Bid($anne, 1000));
+        $auction->receiveBid(new Bid($anne, 1500));
+
+        $bids = $auction->getBids();
+        self::assertCount(1, $bids);
+        self::assertEquals(1000, $bids[array_key_last($bids)]->getValue());
+    }
     
     public function auctionSets(): array
     {
