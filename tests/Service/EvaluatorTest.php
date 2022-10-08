@@ -3,6 +3,7 @@
 namespace PSobucki\Auction\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
+use PSobucki\Auction\Exceptions\EmptyAuctionException;
 use PSobucki\Auction\Model\Auction;
 use PSobucki\Auction\Model\Bid;
 use PSobucki\Auction\Model\User;
@@ -63,6 +64,20 @@ class EvaluatorTest extends TestCase
         static::assertEquals(2500, $highestBids[0]->getValue());
         static::assertEquals(2000, $highestBids[1]->getValue());
         static::assertEquals(1700, $highestBids[2]->getValue());
+    }
+
+    /**
+     * @dataProvider auctionInAscendingOrder
+     * @dataProvider auctionInDescendingOrder
+     * @dataProvider auctionInRandomOrder
+     */
+    public function testEmptyAuctionCannotBeEvaluated(): void
+    {
+        $this->expectException(EmptyAuctionException::class);
+        $this->expectExceptionMessage("An empty Auction cannot be evaluated");
+
+        $auction = new Auction('Blue Beetle');
+        $this->auctioneer->evaluate($auction);
     }
 
 
