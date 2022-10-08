@@ -2,6 +2,7 @@
 
 namespace PSobucki\Auction\Model;
 
+use PSobucki\Auction\Exceptions\MaximumBidsPerUserExceededException;
 use PSobucki\Auction\Exceptions\UserCannotBidTwoTimesInARowException;
 
 class Auction
@@ -20,6 +21,7 @@ class Auction
 
     /**
      * @throws UserCannotBidTwoTimesInARowException
+     * @throws MaximumBidsPerUserExceededException
      */
     public function receiveBid(Bid $bid): void
     {
@@ -29,7 +31,7 @@ class Auction
 
         $totalUserBids = $this->bidCountByUser($bid->getUser());
         if ($totalUserBids >= self::MAX_BIDS_PER_USER) {
-            return;
+            throw new MaximumBidsPerUserExceededException($bid->getUser());
         }
 
         $this->bids[] = $bid;
