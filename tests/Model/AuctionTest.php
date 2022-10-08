@@ -3,6 +3,8 @@
 namespace PSobucki\Auction\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
+use PSobucki\Auction\Exceptions\MaximumBidsPerUserExceededException;
+use PSobucki\Auction\Exceptions\UserCannotBidTwoTimesInARowException;
 use PSobucki\Auction\Model\Auction;
 use PSobucki\Auction\Model\Bid;
 use PSobucki\Auction\Model\User;
@@ -27,6 +29,9 @@ class AuctionTest extends TestCase
 
     public function testAuctionMustNotReceiveRepeatedBids(): void
     {
+        $this->expectException(UserCannotBidTwoTimesInARowException::class);
+        $this->expectExceptionMessage("When adding Bids to an Auction, the same User cannot bid two consecutive times in the same Auction.");
+
         $auction = new Auction('Variant');
         $anne = new User('Anne');
 
@@ -34,12 +39,12 @@ class AuctionTest extends TestCase
         $auction->receiveBid(new Bid($anne, 1500));
 
         $bids = $auction->getBids();
-        self::assertCount(1, $bids);
-        self::assertEquals(1000, $bids[array_key_last($bids)]->getValue());
     }
 
     public function testAuctionShouldNotReceiveMoreThan5BidsPerUser(): void
     {
+        $this->expectException(MaximumBidsPerUserExceededException::class);
+
         $auction = new Auction('White Focus');
         $john = new User('John');
         $anne = new User('Anne');
@@ -58,10 +63,8 @@ class AuctionTest extends TestCase
         $auction->receiveBid(new Bid($john, 6000));
 
         $bids = $auction->getBids();
-        static::assertCount(10, $bids);
-        static::assertEquals(5500, $bids[array_key_last($bids)]->getValue());
     }
-    
+
     public function auctionSets(): array
     {
         $john = new User('John');
