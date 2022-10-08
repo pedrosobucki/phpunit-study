@@ -2,6 +2,7 @@
 
 namespace PSobucki\Auction\Service;
 
+use PSobucki\Auction\Exceptions\EmptyAuctionException;
 use PSobucki\Auction\Model\Auction;
 use PSobucki\Auction\Model\Bid;
 
@@ -11,8 +12,15 @@ class Evaluator
     private float $lowestBid = INF;
     private array $highestBids = [];
 
+    /**
+     * @throws EmptyAuctionException
+     */
     public function evaluate(Auction $auction): void
     {
+        if (empty($auction->getBids())) {
+            throw new EmptyAuctionException();
+        }
+
         foreach ($auction->getBids() as $bid) {
             if ($bid->getValue() > $this->highestBid) {
                 $this->highestBid = $bid->getValue();
