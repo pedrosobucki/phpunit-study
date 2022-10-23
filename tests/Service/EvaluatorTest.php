@@ -4,6 +4,8 @@ namespace PSobucki\Auction\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
 use PSobucki\Auction\Exceptions\EmptyAuctionException;
+use PSobucki\Auction\Exceptions\MaximumBidsPerUserExceededException;
+use PSobucki\Auction\Exceptions\UserCannotBidTwoTimesInARowException;
 use PSobucki\Auction\Model\Auction;
 use PSobucki\Auction\Model\Bid;
 use PSobucki\Auction\Model\User;
@@ -22,6 +24,7 @@ class EvaluatorTest extends TestCase
      * @dataProvider auctionInAscendingOrder
      * @dataProvider auctionInDescendingOrder
      * @dataProvider auctionInRandomOrder
+     * @throws EmptyAuctionException
      */
     public function testAuctioneerShouldFindHighestBid(Auction $auction): void
     {
@@ -37,6 +40,7 @@ class EvaluatorTest extends TestCase
      * @dataProvider auctionInAscendingOrder
      * @dataProvider auctionInDescendingOrder
      * @dataProvider auctionInRandomOrder
+     * @throws EmptyAuctionException
      */
     public function testAuctioneerShouldFindLowestBid(Auction $auction): void
     {
@@ -52,6 +56,7 @@ class EvaluatorTest extends TestCase
      * @dataProvider auctionInAscendingOrder
      * @dataProvider auctionInDescendingOrder
      * @dataProvider auctionInRandomOrder
+     * @throws EmptyAuctionException
      */
     public function testAuctioneerMustRetrieve3HighestBiddingValues(Auction $auction): void
     {
@@ -81,6 +86,10 @@ class EvaluatorTest extends TestCase
     }
 
 
+    /**
+     * @throws MaximumBidsPerUserExceededException
+     * @throws UserCannotBidTwoTimesInARowException
+     */
     public function auctionInAscendingOrder(): array
     {
         $auction = new Auction('Fiat 147 0KM');
@@ -98,6 +107,10 @@ class EvaluatorTest extends TestCase
         ];
     }
 
+    /**
+     * @throws UserCannotBidTwoTimesInARowException
+     * @throws MaximumBidsPerUserExceededException
+     */
     public function auctionInDescendingOrder(): array
     {
         $auction = new Auction('Fiat 147 0KM');
@@ -115,6 +128,10 @@ class EvaluatorTest extends TestCase
         ];
     }
 
+    /**
+     * @throws UserCannotBidTwoTimesInARowException
+     * @throws MaximumBidsPerUserExceededException
+     */
     public function auctionInRandomOrder(): array
     {
         $auction = new Auction('Fiat 147 0KM');

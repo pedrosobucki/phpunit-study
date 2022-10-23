@@ -27,6 +27,9 @@ class AuctionTest extends TestCase
         }
     }
 
+    /**
+     * @throws MaximumBidsPerUserExceededException
+     */
     public function testAuctionMustNotReceiveRepeatedBids(): void
     {
         $this->expectException(UserCannotBidTwoTimesInARowException::class);
@@ -41,6 +44,9 @@ class AuctionTest extends TestCase
         $bids = $auction->getBids();
     }
 
+    /**
+     * @throws UserCannotBidTwoTimesInARowException
+     */
     public function testAuctionShouldNotReceiveMoreThan5BidsPerUser(): void
     {
         $this->expectException(MaximumBidsPerUserExceededException::class);
@@ -61,10 +67,12 @@ class AuctionTest extends TestCase
         $auction->receiveBid(new Bid($anne, 5500));
 
         $auction->receiveBid(new Bid($john, 6000));
-
-        $bids = $auction->getBids();
     }
 
+    /**
+     * @throws UserCannotBidTwoTimesInARowException
+     * @throws MaximumBidsPerUserExceededException
+     */
     public function auctionSets(): array
     {
         $john = new User('John');
