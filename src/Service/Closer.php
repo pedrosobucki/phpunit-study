@@ -2,19 +2,26 @@
 
 namespace PSobucki\Auction\Service;
 
+use Exception;
 use PSobucki\Auction\DAO\AuctionDAO;
 
 class Closer
 {
-    public function close()
+
+    public function __construct(private readonly AuctionDAO $dao = new AuctionDAO())
+    {}
+
+    /**
+     * @throws Exception
+     */
+    public function close(): void
     {
-        $dao = new AuctionDao();
-        $auctions = $dao->fetchNotClosed();
+        $auctions = $this->dao->fetchNotClosed();
 
         foreach ($auctions as $auction) {
             if ($auction->wasCreatedMoreThanOneWeekAgo()) {
                 $auction->close();
-                $dao->update($auction);
+                $this->dao->update($auction);
             }
         }
     }
