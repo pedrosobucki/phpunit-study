@@ -3,6 +3,7 @@
 namespace PSobucki\Auction\DAO;
 
 use DateTimeImmutable;
+use Exception;
 use PDO;
 use PSobucki\Auction\Infra\ConnectionCreator;
 use PSobucki\Auction\Model\Auction;
@@ -51,6 +52,7 @@ class AuctionDAO
 
     /**
      * @return Auction[]
+     * @throws Exception
      */
     public function fetchNotClosed(): array
     {
@@ -59,6 +61,7 @@ class AuctionDAO
 
     /**
      * @return Auction[]
+     * @throws Exception
      */
     public function fetchClosed(): array
     {
@@ -67,6 +70,7 @@ class AuctionDAO
 
     /**
      * @return Auction[]
+     * @throws Exception
      */
     private function fetchBasedOnClosedStatus(bool $closed): array
     {
