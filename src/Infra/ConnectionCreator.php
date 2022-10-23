@@ -11,7 +11,7 @@ class ConnectionCreator
     public static function getConnection(): PDO
     {
         if (!isset(self::$pdo)) {
-            $databasePath = __DIR__ . '/../../db.sqlite';
+            $databasePath = __DIR__ . '/../../database.sqlite';
             self::$pdo = new PDO('sqlite:' . $databasePath);
             self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
