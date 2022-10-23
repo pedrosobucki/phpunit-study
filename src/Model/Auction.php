@@ -2,6 +2,8 @@
 
 namespace PSobucki\Auction\Model;
 
+use DateTime;
+use DateTimeImmutable;
 use PSobucki\Auction\Exceptions\MaximumBidsPerUserExceededException;
 use PSobucki\Auction\Exceptions\UserCannotBidTwoTimesInARowException;
 
@@ -10,13 +12,48 @@ class Auction
     public const MAX_BIDS_PER_USER = 5;
 
     /** @var Bid[] */
-    private array $bids;
-    private string $description;
+    private array $bids = [];
+    private bool $closed = false;
 
-    public function __construct(string $description)
+    public function __construct(
+        private readonly string $description,
+        private readonly DateTimeImmutable $startDate = new DateTimeImmutable(),
+        private readonly ?int $id = null
+    )
+    {}
+
+    public function description(): string
     {
-        $this->description = $description;
-        $this->bids = [];
+        return $this->description;
+    }
+
+
+    public function id(): ?int
+    {
+        return $this->id;
+    }
+
+    public function startDate(): DateTimeImmutable
+    {
+        return $this->startDate;
+    }
+
+    public function wasCreatedMoreThanOneWeekAgo(): bool
+    {
+        $today = new DateTime();
+        $difference = $this->startDate->diff($today);
+
+        return $difference->days > 7;
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->closed;
+    }
+
+    public function close(): void
+    {
+        $this->closed = true;
     }
 
     /**
