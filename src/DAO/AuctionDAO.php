@@ -35,9 +35,9 @@ class AuctionDAO
         WHERE id = :id
     ';
 
-    public function __construct()
+    public function __construct(PDO $con = null)
     {
-        $this->con = ConnectionCreator::getConnection();
+        $this->con = $con ?? ConnectionCreator::getConnection();
     }
 
     public function save(Auction $auction): bool
