@@ -6,6 +6,7 @@ use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PSobucki\Auction\DAO\AuctionDAO;
+use PSobucki\Auction\Exceptions\FailedToSendMailException;
 use PSobucki\Auction\Model\Auction;
 use PSobucki\Auction\Service\Closer;
 use PSobucki\Auction\Service\MailSender;
@@ -61,5 +62,18 @@ class CloserTest extends TestCase
 
         static::assertTrue($closedAuctions[0]->isClosed());
         static::assertTrue($closedAuctions[1]->isClosed());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testAuctionsAreStillClosedWhenMailExceptionIsThrown(): void
+    {
+        $this->mailSenderMock
+            ->expects($this->exactly(2))
+            ->method('notifiesAuctionEnd')
+            ->willThrowException(new FailedToSendMailException());
+
+        $this->closer->close();
     }
 }
