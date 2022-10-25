@@ -4,6 +4,7 @@ namespace PSobucki\Auction\Service;
 
 use Exception;
 use PSobucki\Auction\DAO\AuctionDAO;
+use PSobucki\Auction\Exceptions\FailedToSendMailException;
 
 class Closer
 {
@@ -27,7 +28,11 @@ class Closer
                 $auction->close();
                 $this->dao->update($auction);
 
-                $this->mailSender->notifiesAuctionEnd($auction);
+                try {
+                    $this->mailSender->notifiesAuctionEnd($auction);
+                } catch (FailedToSendMailException $e) {
+                    // treats exception
+                }
             }
         }
     }
